@@ -8,6 +8,7 @@ module linkedList
     contains
       procedure :: push
       procedure :: print
+      procedure :: verificarElementos
   end type linked_list
 
   type :: node
@@ -52,4 +53,17 @@ module linkedList
       current => current%next
     end do
   end subroutine print
+
+  subroutine verificarElementos(self, verificarEstado)
+    class(linked_list), intent(inout) :: self
+    logical::verificarEstado
+    if (.not. associated(self%head)) then
+      verificarEstado = .false.
+    else
+      verificarEstado = .true.
+    end if
+    end subroutine verificarElementos
+    
 end module linkedList
+
+  

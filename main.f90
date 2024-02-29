@@ -1,8 +1,25 @@
 program menu
-    
+    use cliente 
+    use linkedList
+    use listaVentanas
+    use ventanilla
     implicit none
     integer :: ops
-    
+    integer cant
+    integer i
+    type(Clientes):: nuevoCliente 
+    type(Ventanillas):: nuevaVentanilla
+    type(linked_list):: mylist
+    type(lista_ventanas):: listaVentanillas
+    integer :: opsPI
+    character(len=1):: pasar
+    integer :: opsEP
+    logical:: ver
+    logical:: verVenLib
+    integer:: contPaso
+    contPaso = 0
+
+
     do while(.true.)
     print*, "--------------------MENU--------------------"
     print*, "|  1. Parametros iniciales                 |"
@@ -15,9 +32,86 @@ program menu
     print*, "Ingrese una opcion: "
     read(*,*) ops
     if(ops.eq.1)then
-        call parametrosIniciales()
+
+
+
+        print*, "------------PARAMETROS INICIALES------------"
+        print*, "|  1. Regresar                             |"
+        print*, "|  2. Carga masiva de clientes             |" 
+        print*, "|  3. Cantidad de ventanillas              |" 
+        print*, "|  4. Imprimir clientes                    |" 
+        print*, "|  5. Imprimir ventanillas                 |" 
+        print*, "--------------------------------------------"
+        print*, "Ingrese una opcion: " 
+        read(*,*) opsPI
+        select case(opsPI)
+        case(1)
+        case(2)
+            call Cinicializar(nuevoCliente, 1, "Nestor Villatoro", 3, 2)
+            call mylist%push(nuevoCliente)
+            call Cinicializar(nuevoCliente, 2, "Enrique Avendanio", 4, 3)
+            call mylist%push(nuevoCliente)
+            call Cinicializar(nuevoCliente, 3, "Nestor Avendanio", 1, 1)
+            call mylist%push(nuevoCliente)
+            call Cinicializar(nuevoCliente, 4, "Enrique Villatoro", 3, 0)
+            call mylist%push(nuevoCliente)
+        case(3)
+            print*, "Ingrese la cantidad de ventanillas: "
+            read(*,*) cant
+            do i = 1, cant
+                call Vinicializar(nuevaVentanilla, i, .false., 0, 0) 
+                call listaVentanillas%pushV(nuevaVentanilla)
+            enddo
+        case(4)
+            call  mylist%print()
+        case(5)
+            call listaVentanillas%printV()
+        end select
+        call siguiente()
+
+
+
     else if(ops.eq.2) then 
-        call ejecutarPaso()
+        
+        
+
+        print*, "----------------EJECUTAR PASO----------------"
+        print*, "|  1. Regresar                              |"
+        print*, "|  2. Ejecutar pasos                        |"
+        print*, "---------------------------------------------"
+        print*, "Ingrese una opcion: "
+        read(*,*) opsEP
+        select case(opsEP)
+        case(1)
+        case(2)
+
+            do while(.true.)
+                print*, "Desea continuar con los pasos? Y/N "
+                read(*,*) pasar
+                if(pasar.eq."Y") then
+                    contPaso = contPaso+1
+                    print*, "=============Paso ", contPaso, "============="
+                    call verificarElementos(mylist, ver)
+                    if(ver .eqv. .true.) then
+                        call verificarEspacio(listaVentanillas, verVenLib) 
+                        if(verVenLib.eqv..true.)then 
+                        end if    
+                    else  
+                        print*, "Ya no hay clientes en espera"
+                    end if
+                else if(pasar.eq."N") then
+                    exit
+                else 
+                    print*, "Opcion no valida"
+                end if
+                print*, "==============================="
+            enddo
+
+        end select
+        call siguiente()
+
+
+
     else if(ops.eq.3) then
         call estadoDeMemoria()
     else if(ops.eq.4) then
@@ -32,45 +126,7 @@ program menu
     enddo
 end program menu
 
-subroutine parametrosIniciales()
-use cliente 
-use linkedList
-implicit none
-type(Clientes):: nuevoCliente 
-type(linked_list):: mylist
-integer :: opsPI
-print*, "------------PARAMETROS INICIALES------------"
-print*, "|  1. Regresar                             |"
-print*, "|  2. Carga masiva de clientes             |"
-print*, "|  3. Cantidad de ventanillas              |" 
-print*, "--------------------------------------------"
-print*, "Ingrese una opcion: " 
-read(*,*) opsPI
-select case(opsPI)
-case(1)
-case(2)
-    call inicializar(nuevoCliente, 1, "Nestor Villatoro", 3, 2)
-    call mylist%push(nuevoCliente) 
-    call mylist%print()
-case(3)
-end select
-call siguiente()
-end subroutine parametrosIniciales
-subroutine ejecutarPaso()
-implicit none
-integer :: opsEP
-print*, "----------------EJECUTAR PASO----------------"
-print*, "|  1. Regresar                              |"
-print*, "---------------------------------------------"
-print*, "Ingrese una opcion: "
-read(*,*) opsEP
-select case(opsEP)
-case(1)
-case(2)
-case(3)
-end select
-call siguiente()
-end subroutine ejecutarPaso 
+
 
 subroutine estadoDeMemoria()
 implicit none
@@ -86,7 +142,7 @@ case(2)
 case(3)
 end select
 call siguiente()
-end subroutine
+end subroutine estadoDeMemoria
 
 subroutine reportes()
 implicit none
@@ -102,7 +158,7 @@ case(2)
 case(3)
 end select
 call siguiente() 
-end subroutine
+end subroutine reportes
 
 subroutine acercaDe()
 print*, "-----------------ACERCA DE-----------------"
@@ -115,9 +171,22 @@ print*, "|  Curso: Lab estructura de datos         |"
 print*, "|  Semestre: 5to semestre                 |"
 print*, "-------------------------------------------"
 call siguiente()
-end subroutine
+end subroutine acercaDe
 
 subroutine siguiente()
 print*, "Presione enter para continuar"
 read(*,*) 
-end subroutine
+end subroutine siguiente
+
+subroutine filaVentanilla()
+    use listaVentanas
+    use linkedList
+implicit none
+type(linked_list):: ver
+logical:: TorF
+    call verificarElementos(ver, TorF)
+    if(TorF .eqv. .true.) then
+    else 
+        print*, "Ya no hay clientes en espera"
+    end if
+end subroutine filaVentanilla
