@@ -54,9 +54,10 @@ module listaVentanas
       end do
     end subroutine printV
 
-    subroutine verificarEspacio(self, verificarVentanillaLibre)
+    subroutine verificarEspacio(self, verificarVentanillaLibre, NoVen)
         class(lista_ventanas), intent(in) :: self
         logical:: verificarVentanillaLibre
+        integer:: NoVen
         type(node), pointer :: current
   
       current => self%head
@@ -65,12 +66,30 @@ module listaVentanas
         if(current%value%verificador .eqv. .false.) then
             verificarVentanillaLibre = .true.
             current%value%verificador = .true.
+            NoVen = current%value%id 
+            print*, "Ventanilla disponible encontrada"
             exit
         else
             verificarVentanillaLibre = .false.
-            print*, "No hay ventanillas disponibles"
+
         end if
         current => current%next
       end do
-    end subroutine
+    end subroutine verificarEspacio
+
+    subroutine cambiarEstadoVentanilla(self, IDV)
+      class(lista_ventanas), intent(in) :: self
+      integer, intent(in):: IDV
+      type(node), pointer :: current
+
+    current => self%head
+
+    do while (associated(current))
+      if(current%value%id .eq. IDV) then
+          current%value%verificador = .false.
+      end if
+      current => current%next
+    end do
+  end subroutine cambiarEstadoVentanilla
+
   end module listaVentanas

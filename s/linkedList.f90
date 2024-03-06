@@ -1,6 +1,6 @@
 module linkedList
   use cliente 
-  implicit none
+  implicit none 
 
   type :: linked_list
     type(node), pointer :: head => null() ! head of the list
@@ -9,12 +9,13 @@ module linkedList
       procedure :: push
       procedure :: print
       procedure :: verificarElementos
+      procedure :: verificarEstadoDeElementos 
   end type linked_list
 
   type :: node
     type(Clientes) :: value
     type(node), pointer :: next
-  end type node
+  end type node 
 
   contains
 
@@ -63,7 +64,70 @@ module linkedList
       verificarEstado = .true.
     end if
     end subroutine verificarElementos
-    
+
+    subroutine verificarEstadoDeElementos(self, verificarEstadoElementos)
+      class(linked_list), intent(in) :: self
+        type(node), pointer :: current
+        logical:: verificarEstadoElementos
+
+      current => self%head
+  
+      do while (associated(current))
+        if(current%value%atendido.eqv..false.) then
+            verificarEstadoElementos = .false.
+            exit 
+        else
+            verificarEstadoElementos = .true.
+        end if
+        current => current%next
+      end do
+      end subroutine verificarEstadoDeElementos
+
+  subroutine cambiarEstadoCliente(self, ClieCam, idClieCam, imgP, imgG)
+    class(linked_list), intent(in) :: self
+        type(node), pointer :: current
+        character(len=*):: ClieCam
+        integer:: idClieCam, imgP, imgG
+
+      current => self%head
+  
+      do while (associated(current))
+        if((current%value%estado_atendido .eqv. .false.).and.(current%value%atendido.eqv..false.)) then
+            current%value%estado_atendido = .true.
+            ClieCam = current%value%nombre
+            idClieCam = current%value%id
+            imgP = current%value%img_p
+            imgG = current%value%img_g
+            exit
+        else
+
+        end if
+        current => current%next
+      end do
+
+  end subroutine
+
+  subroutine verificarContadores(self, IDA)
+    class(linked_list), intent(in) :: self
+    integer:: IDA
+        type(node), pointer :: current
+  
+      current => self%head
+  
+      do while (associated(current))
+        if(current%value%id .eq. IDA) then
+            print*, "Cliente ", current%value%nombre, " atendido exitosamente"
+            current%value%atendido = .true.
+            exit
+        else
+ 
+        end if
+        current => current%next
+      end do
+  end subroutine verificarContadores
+
+
+  
 end module linkedList
 
   

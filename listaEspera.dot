@@ -1,0 +1,16 @@
+digraph CircularList {
+  node [shape=circle];
+  rankdir = LR;
+  Head -> Node8;
+  Tail -> Node7;
+  Node8 [label="8"];
+  Node7 -> Node8
+;
+  Node7 -> Node8
+;
+  Node7 [label="7"];
+  Node8 -> Node7
+;
+  Node8 -> Node7
+;
+}
